@@ -1,0 +1,89 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  /*"enabled_providers": [
+    "opencode",
+    "opencode-go",
+    "openrouter",
+    "deepseek",
+    "google",
+    "orcarouter"
+  ],
+  "mcp": {
+    "lingua": {
+      "type": "remote",
+      "url": "http://localhost:4000/mcp",
+      "headers": {
+        "Authorization": "Bearer sk-local-lingua"
+      },
+      "enabled": true
+    }
+  },
+  "provider": {
+    "opencode": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Zen via Lingua",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "zen"
+        }
+      }
+    },
+    "opencode-go": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Go via Lingua",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "opencode-go"
+        }
+      }
+    },
+    "openrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenRouter via Lingua",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "openrouter"
+        }
+      }
+    },
+    "deepseek": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DeepSeek via Lingua",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "deepseek"
+        }
+      }
+    },
+    "google": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Google via Lingua",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "google"
+        }
+      }
+    },
+    "orcarouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OrcaRouter via Lingua",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "orcarouter"
+        }
+      }
+    }
+  }*/
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "opencode": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://localhost:4000/v1",
+        "apiKey": "sk-local-lingua",
+        "headers": {
+          "X-Gateway-Upstream": "zen"
+        }
+      }
+    }
+  }
+}

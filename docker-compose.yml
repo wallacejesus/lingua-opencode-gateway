@@ -1,0 +1,41 @@
+services:
+  lingua:
+    build:
+      context: ./lingua
+    container_name: lingua-compressor
+    environment:
+      LINGUA_DEVICE: ${LINGUA_DEVICE:-cpu}
+      LINGUA_MODEL_NAME_ID: ${LINGUA_MODEL_NAME_ID:-microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank}
+      HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-0}
+    expose:
+      - "8001"
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+    restart: unless-stopped
+
+  gateway:
+    build:
+      context: ./gateway
+    container_name: lingua-opencode-gateway
+    environment:
+      OPENCODE_API_KEY: ${OPENCODE_API_KEY}
+      OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      ORCAROUTER_API_KEY: ${ORCAROUTER_API_KEY}
+      GATEWAY_API_KEY: ${GATEWAY_API_KEY:-sk-local-lingua}
+      LINGUA_URL: ${LINGUA_URL:-http://lingua:8001}
+      CONFIG_FILE: /app/config.yml
+    ports:
+      - "${GATEWAY_PORT:-4000}:4000"
+    volumes:
+      - ./config.yml:/app/config.yml:ro
+      - gateway-data:/app/data
+    depends_on:
+      - lingua
+    restart: unless-stopped
+
+volumes:
+  hf-cache:
+  gateway-data:

@@ -1,0 +1,85 @@
+server:
+  host: 0.0.0.0
+  port: 4000
+
+compression:
+  enabled: true
+  log: true
+
+  # Do not compress short requests.
+  min_input_chars: 24000
+
+  # LLMLingua compression rate:
+  # 0.5 means a target compressed/raw size of roughly 50%.
+  rate: 0.50
+
+  preserve_system: true
+  preserve_latest_user: true
+
+metering:
+  enabled: true
+  persist_path: /app/data/metering.json
+  history_size: 500
+  pricing:
+    url: https://models.dev/api.json
+    refresh_interval_seconds: 86400
+  tokenizer:
+    mode: estimate
+
+# Each provider is selected by the X-Gateway-Upstream request header.
+# Model catalogs remain owned by OpenCode; validation is enabled only for Zen.
+upstreams:
+  opencode-zen:
+    base_url: https://opencode.ai/zen/v1
+    api_key_env: OPENCODE_API_KEY
+    models_path: /models
+    validate_models: true
+    default_protocol: chat
+    protocol_rules:
+      - pattern: "^gpt-"
+        protocol: responses
+      - pattern: "^claude-"
+        protocol: messages
+      - pattern: "^jev-"
+        protocol: systemone
+    reject_systemone_from_chat: true
+
+  opencode-go:
+    base_url: https://opencode.ai/zen/go/v1
+    api_key_env: OPENCODE_GO_API_KEY
+    default_protocol: chat
+
+  openrouter:
+    base_url: https://openrouter.ai/api/v1
+    api_key_env: OPENROUTER_API_KEY
+    default_protocol: chat
+
+  deepseek:
+    base_url: https://api.deepseek.com
+    api_key_env: DEEPSEEK_API_KEY
+    default_protocol: chat
+
+  google:
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    api_key_env: GOOGLE_API_KEY
+    default_protocol: chat
+
+  orcarouter:
+    base_url: https://api.orcarouter.ai/v1
+    api_key_env: ORCAROUTER_API_KEY
+    default_protocol: chat
+
+routing:
+  default_upstream: opencode-zen
+  refresh_interval_seconds: 900
+  forward_headers:
+    - x-opencode-session
+    - x-opencode-session-id
+    - x-opencode-request
+    - x-opencode-client
+    - x-opencode-project
+    - x-opencode-parent-session-id
+    - x-parent-session-id
+    - x-session-affinity
+    - x-session-id
+    - user-agent
