@@ -71,21 +71,72 @@ Check the default upstream's models:
     curl http://localhost:4000/v1/models \
       -H "Authorization: Bearer sk-local-lingua"
 
-## 3. OpenCode
+## 3. Use with OpenCode
 
-The project `opencode.jsonc` points all six providers at:
+The repository includes an `opencode.jsonc` file. OpenCode automatically loads
+this file when you run OpenCode from this repository:
+
+    opencode
+
+If you want to use the gateway from another project, copy `opencode.jsonc` into
+that project's root directory (or into `.opencode/opencode.jsonc`). The file
+configures OpenCode to send requests to:
 
     http://localhost:4000/v1
 
-The gateway selects the real upstream with:
+The local gateway key in `opencode.jsonc` must match `GATEWAY_API_KEY` in
+`.env`. The default value for both is:
 
-    X-Gateway-Upstream: <upstream-id>
+    sk-local-lingua
 
-The upstream IDs are `zen`, `opencode-go`, `openrouter`, `deepseek`, `google`, and `orcarouter`.
+Do not put upstream provider keys in `opencode.jsonc`. They stay in `.env` and
+are used by the gateway:
+
+| OpenCode provider | Gateway upstream | Environment variable |
+| --- | --- | --- |
+| `opencode` | `opencode-zen` | `OPENCODE_API_KEY` |
+| `opencode-go` | `opencode-go` | `OPENCODE_GO_API_KEY` |
+| `openrouter` | `openrouter` | `OPENROUTER_API_KEY` |
+| `deepseek` | `deepseek` | `DEEPSEEK_API_KEY` |
+| `google` | `google` | `GOOGLE_API_KEY` |
+| `orcarouter` | `orcarouter` | `ORCAROUTER_API_KEY` |
+
+After the gateway is running:
+
+1. Start OpenCode from the project directory:
+
+       opencode
+
+2. Open the model picker with `/models`.
+3. Select a model from one of the enabled providers.
+4. Use OpenCode normally. Large chat histories are compressed automatically
+   before being sent upstream.
+
+Each provider sends the `X-Gateway-Upstream` header so the gateway knows which
+upstream should receive the request. The gateway then adds the corresponding
+provider API key from `.env`.
+
+### Important upstream-name correction
+
+The gateway uses the exact upstream IDs from `config.yml`. The Zen upstream is
+named `opencode-zen`, not `zen`. Therefore, the Zen provider in
+`opencode.jsonc` must use:
+
+    "X-Gateway-Upstream": "opencode-zen"
+
+If your local file currently says `"zen"`, change it to
+`"opencode-zen"` before using the Zen provider. The other upstream IDs are
+`opencode-go`, `openrouter`, `deepseek`, `google`, and `orcarouter`.
 
 ### Metering and MCP
 
-The gateway persists per-session token and cost records in the `gateway-data` volume. OpenCode connects to the remote MCP server at `/mcp`, exposing:
+The same `opencode.jsonc` also connects OpenCode to the gateway's remote MCP
+server:
+
+    http://localhost:4000/mcp
+
+The gateway persists per-session token and cost records in the `gateway-data`
+volume. OpenCode exposes these MCP tools:
 
 - `lingua_session_report`: current/most recent session tokens and cost.
 - `lingua_context_report`: latest request's original estimate versus billed usage.
@@ -93,7 +144,9 @@ The gateway persists per-session token and cost records in the `gateway-data` vo
 - `lingua_list_sessions`: recent session summaries.
 - `lingua_verify_exact`: explicitly re-measures a supplied prompt; this can incur a full upstream request cost.
 
-Ask OpenCode: `What is the cost of this current session? Use the lingua session_report tool.`
+Example prompt:
+
+    What is the cost of this current session? Use the lingua session_report tool.
 
 The normal reports use character-based original-token estimates and exact upstream billed usage. Exact replay of a session containing tool-call messages may not be possible; use `verify_exact` with explicit text in that case.
 
